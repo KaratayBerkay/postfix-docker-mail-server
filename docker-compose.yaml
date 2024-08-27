@@ -1,0 +1,53 @@
+version: "3.9"
+
+networks:
+  postfix:
+    name: postfix
+    driver: bridge
+
+# secrets:
+  # smtp_password:
+    # file: /path/to/your/secret/file/smtp_password
+
+services:
+  postfix:
+    image: bleala/postfix:latest
+    container_name: postfix
+    hostname: postfix
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      SMTP_SERVER:
+      SMTP_PORT: 
+      SMTP_USERNAME:
+      SMTP_PASSWORD:
+      SERVER_HOSTNAME:
+      SMTP_HEADER_TAG:
+      SMTP_NETWORKS:
+      SMTP_PASSWORD_FILE:
+      ALWAYS_ADD_MISSING_HEADERS: yes
+      OVERWRITE_FROM: "Your Name <email@company.com>"
+      DESTINATION:
+      LOG_SUBJECT: yes
+      SMTPUTF8_ENABLE: no
+      MESSAGE_SIZE_LIMIT:
+    env_file:
+      - .env
+    networks:
+      postfix:
+    ports:
+      - target: 25
+        published: 25
+        protocol: tcp
+        mode: host
+#  secrets:
+#      - smtp_password
+    volumes:
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+
+
+
